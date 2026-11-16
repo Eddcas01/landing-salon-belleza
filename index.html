@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="es">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Luna Lash &amp; Nail</title>
+<style>
+  /* Layout: editorial single-column flow of full-bleed dark sections over a
+     centered ~1120px content rail; the hero is a two-column split that stacks on phones.
+     Deliberate single dark theme — a luxe atelier look that commits to one world. */
+  :root{
+    color-scheme: dark;
+    --bg:#120d14;        /* espresso–plum, near black */
+    --bg-2:#1a121d;      /* raised section */
+    --card:#221826;      /* card surface */
+    --card-2:#2a1e2f;    /* card hover / inset */
+    --line:#3a2b3d;      /* hairline */
+    --fg:#f4ebf0;        /* warm off-white */
+    --muted:#b7a1b4;     /* mauve-grey text */
+    --faint:#8a7589;     /* fainter labels */
+    --rose:#e85a8a;      /* lacquer rose — primary accent */
+    --rose-2:#f59ab9;    /* soft rose */
+    --gold:#d8a86b;      /* champagne — secondary accent */
+    --plum:#6c3f6a;
+
+    --rail: 1120px;
+    --r: 18px;
+    --r-sm: 11px;
+
+    --display: "Fraunces", "Playfair Display", Georgia, serif;
+    --body: "Jost", "Century Gothic", system-ui, -apple-system, sans-serif;
+  }
+
+  *{ box-sizing:border-box }
+  html{ scroll-behavior:smooth }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--fg);
+    font-family:var(--body);
+    font-weight:300;
+    font-size:clamp(15px,1.05vw,16.5px);
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto }
+    *{ animation:none !important; transition:none !important }
+  }
+
+  /* atmospheric glows */
+  body::before{
+    content:"";
+    position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background:
+      radial-gradient(60% 50% at 82% -5%, rgba(232,90,138,.18), transparent 70%),
+      radial-gradient(50% 45% at 8% 8%, rgba(108,63,106,.22), transparent 70%),
+      radial-gradient(40% 40% at 50% 115%, rgba(216,168,107,.10), transparent 70%);
+  }
+
+  a{ color:inherit; text-decoration:none }
+  img{ max-width:100%; display:block }
+  h1,h2,h3{ font-family:var(--display); font-weight:400; text-wrap:balance; margin:0; letter-spacing:-.01em }
+
+  .rail{ width:100%; max-width:var(--rail); margin-inline:auto; padding-inline:22px }
+  section{ padding-block:clamp(56px,8vw,104px) }
+
+  .eyebrow{
+    font-family:var(--body); font-weight:500;
+    text-transform:uppercase; letter-spacing:.32em;
+    font-size:.72rem; color:var(--rose-2);
+  }
+  .lead{ color:var(--muted); font-weight:300 }
+
+  /* ---------- buttons ---------- */
+  .btn{
+    display:inline-flex; align-items:center; gap:.55em;
+    font-family:var(--body); font-weight:500; font-size:.92rem;
+    letter-spacing:.02em;
+    padding:.85em 1.5em; border-radius:999px;
+    border:1px solid transparent; cursor:pointer;
+    transition:transform .2s ease, background .25s ease, border-color .25s ease, box-shadow .25s ease;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg,var(--rose),#c8406f);
+    color:#fff; box-shadow:0 10px 30px -12px rgba(232,90,138,.8);
+  }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 16px 36px -12px rgba(232,90,138,.9) }
+  .btn-ghost{ background:transparent; border-color:var(--line); color:var(--fg) }
+  .btn-ghost:hover{ border-color:var(--rose); color:var(--rose-2); transform:translateY(-2px) }
+
+  /* ---------- nav ---------- */
+  header.nav{
+    position:sticky; top:env(safe-area-inset-top,0px); z-index:50;
+    backdrop-filter:blur(14px);
+    background:linear-gradient(to bottom, rgba(18,13,20,.9), rgba(18,13,20,.6));
+    border-bottom:1px solid transparent;
+    transition:border-color .3s ease, background .3s ease;
+  }
+  header.nav.scrolled{ border-color:var(--line) }
+  .nav-in{ display:flex; align-items:center; justify-content:space-between; gap:16px; padding-block:14px }
+  .brand{ font-family:var(--display); font-size:1.5rem; letter-spacing:.14em; display:flex; align-items:baseline; gap:.5em }
+  .brand span{ font-family:var(--body); font-size:.6rem; letter-spacing:.3em; text-transform:uppercase; color:var(--faint) }
+  .nav-links{ display:flex; gap:30px; font-size:.9rem; color:var(--muted); letter-spacing:.04em }
+  .nav-links a{ position:relative; padding-block:4px }
+  .nav-links a::after{ content:""; position:absolute; left:0; bottom:0; height:1px; width:0; background:var(--rose); transition:width .25s ease }
+  .nav-links a:hover{ color:var(--fg) } .nav-links a:hover::after{ width:100% }
+  @media (max-width:860px){ .nav-links{ display:none } }
+
+  /* ---------- hero ---------- */
+  .hero{ padding-top:clamp(40px,7vw,80px) }
+  .hero-grid{ display:grid; grid-template-columns:1.1fr .9fr; gap:clamp(28px,5vw,64px); align-items:center }
+  @media (max-width:820px){ .hero-grid{ grid-template-columns:1fr } }
+  .hero h1{ font-size:clamp(2.7rem,7vw,5rem); line-height:1.02; margin-top:18px }
+  .hero h1 em{ font-style:italic; color:var(--rose-2) }
+  .hero p.sub{ font-size:1.12rem; max-width:46ch; margin:22px 0 30px }
+  .hero-cta{ display:flex; flex-wrap:wrap; gap:14px }
+  .proof{ display:flex; flex-wrap:wrap; align-items:center; gap:10px 22px; margin-top:34px; color:var(--muted); font-size:.86rem }
+  .proof b{ color:var(--fg); font-weight:500 }
+  .proof .dot{ width:4px; height:4px; border-radius:50%; background:var(--plum) }
+  .hero-art{ min-width:0 }
+  .hero-art svg{ width:100%; height:auto; filter:drop-shadow(0 20px 50px rgba(232,90,138,.25)) }
+
+  /* ---------- value strip ---------- */
+  .values{ border-block:1px solid var(--line); background:var(--bg-2) }
+  .values .rail{ display:grid; grid-template-columns:repeat(4,1fr); gap:28px; padding-block:34px }
+  @media (max-width:760px){ .values .rail{ grid-template-columns:repeat(2,1fr); gap:24px } }
+  .value h3{ font-family:var(--body); font-weight:500; font-size:1rem; letter-spacing:.01em; margin-bottom:4px }
+  .value p{ margin:0; font-size:.86rem; color:var(--muted) }
+  .value .ico{ color:var(--rose); margin-bottom:10px }
+
+  /* ---------- section heads ---------- */
+  .sec-head{ max-width:62ch }
+  .sec-head h2{ font-size:clamp(2rem,4.5vw,3.1rem); margin-top:12px; line-height:1.08 }
+  .sec-head p{ margin-top:14px; font-size:1.05rem }
+
+  /* ---------- services ---------- */
+  .svc-group{ margin-top:40px }
+  .svc-group > h3{ font-size:1.5rem; display:flex; align-items:center; gap:14px; color:var(--fg) }
+  .svc-group > h3::before{ content:""; width:30px; height:1px; background:var(--gold) }
+  .svc-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:16px; margin-top:22px }
+  .svc{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--r);
+    padding:24px; display:flex; flex-direction:column; gap:10px;
+    transition:border-color .25s ease, transform .25s ease, background .25s ease;
+  }
+  .svc:hover{ border-color:var(--rose); transform:translateY(-4px); background:var(--card-2) }
+  .svc .top{ display:flex; justify-content:space-between; align-items:baseline; gap:12px }
+  .svc h4{ font-family:var(--display); font-weight:500; font-size:1.22rem; margin:0 }
+  .svc .price{ font-family:var(--body); font-weight:500; color:var(--gold); white-space:nowrap; font-size:.95rem }
+  .svc p{ margin:0; color:var(--muted); font-size:.9rem; flex:1 }
+  .svc .meta{ display:flex; align-items:center; justify-content:space-between; margin-top:6px; padding-top:14px; border-top:1px solid var(--line) }
+  .svc .dur{ font-size:.78rem; letter-spacing:.14em; text-transform:uppercase; color:var(--faint) }
+  .svc .pick{ font-size:.82rem; color:var(--rose-2); font-weight:500; cursor:pointer; background:none; border:none; font-family:var(--body); padding:0; transition:color .2s }
+  .svc .pick:hover{ color:#fff }
+  .note{ margin-top:22px; font-size:.82rem; color:var(--faint) }
+
+  /* ---------- lookbook ---------- */
+  .look{ background:var(--bg-2); border-block:1px solid var(--line) }
+  .look-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:36px }
+  @media (max-width:820px){ .look-grid{ grid-template-columns:repeat(2,1fr) } }
+  @media (max-width:480px){ .look-grid{ grid-template-columns:1fr } }
+  .tile{ position:relative; aspect-ratio:4/5; border-radius:var(--r); overflow:hidden; border:1px solid var(--line); isolation:isolate }
+  .tile .cap{ position:absolute; left:0; right:0; bottom:0; padding:16px 18px; z-index:2;
+    background:linear-gradient(to top, rgba(10,6,11,.9), transparent); }
+  .tile .cap .k{ font-size:.68rem; letter-spacing:.2em; text-transform:uppercase; color:var(--rose-2) }
+  .tile .cap .t{ font-family:var(--display); font-size:1.18rem; margin-top:2px }
+  .tile svg{ position:absolute; inset:0; width:100%; height:100%; z-index:1 }
+  .tile:hover svg{ transform:scale(1.06) } .tile svg{ transition:transform .5s ease }
+
+  /* ---------- testimonials ---------- */
+  .quotes{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:38px }
+  @media (max-width:820px){ .quotes{ grid-template-columns:1fr } }
+  .quote{ background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:26px; display:flex; flex-direction:column; gap:14px }
+  .quote .stars{ color:var(--gold); letter-spacing:3px; font-size:.9rem }
+  .quote p{ margin:0; font-family:var(--display); font-style:italic; font-size:1.12rem; line-height:1.5 }
+  .quote .who{ display:flex; align-items:center; gap:12px; margin-top:auto }
+  .quote .av{ width:40px; height:40px; border-radius:50%; display:grid; place-items:center; font-weight:500; color:#fff; font-size:.95rem }
+  .quote .who b{ font-weight:500; font-size:.92rem } .quote .who span{ display:block; color:var(--faint); font-size:.78rem }
+
+  /* ---------- booking ---------- */
+  .book{ background:linear-gradient(180deg,var(--bg-2),var(--bg)); border-top:1px solid var(--line) }
+  .book-grid{ display:grid; grid-template-columns:.95fr 1.05fr; gap:clamp(28px,5vw,56px); align-items:start; margin-top:36px }
+  @media (max-width:880px){ .book-grid{ grid-template-columns:1fr } }
+  .steps{ list-style:none; padding:0; margin:26px 0 0; display:flex; flex-direction:column; gap:18px; counter-reset:s }
+  .steps li{ display:flex; gap:16px; counter-increment:s }
+  .steps li::before{ content:counter(s); flex:none; width:34px; height:34px; border-radius:50%; border:1px solid var(--rose);
+    color:var(--rose-2); display:grid; place-items:center; font-family:var(--display); font-size:1rem }
+  .steps b{ font-weight:500 } .steps p{ margin:2px 0 0; color:var(--muted); font-size:.9rem }
+  .hours{ margin-top:30px; background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:20px 22px }
+  .hours h4{ font-family:var(--body); font-weight:500; font-size:.78rem; letter-spacing:.18em; text-transform:uppercase; color:var(--faint); margin:0 0 12px }
+  .hours .row{ display:flex; justify-content:space-between; font-size:.9rem; padding:5px 0 }
+  .hours .row span:last-child{ color:var(--muted) }
+
+  form.card{ background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:clamp(22px,4vw,32px) }
+  .field{ margin-bottom:18px }
+  .field label{ display:block; font-size:.8rem; letter-spacing:.06em; color:var(--muted); margin-bottom:7px; text-transform:uppercase }
+  .field label .req{ color:var(--rose) }
+  .field input, .field select, .field textarea{
+    width:100%; background:var(--bg); color:var(--fg);
+    border:1px solid var(--line); border-radius:var(--r-sm);
+    padding:12px 14px; font-family:var(--body); font-size:1rem; font-weight:300;
+    transition:border-color .2s ease, box-shadow .2s ease;
+  }
+  .field textarea{ resize:vertical; min-height:72px }
+  .field input:focus, .field select:focus, .field textarea:focus{
+    outline:none; border-color:var(--rose); box-shadow:0 0 0 3px rgba(232,90,138,.18);
+  }
+  .two{ display:grid; grid-template-columns:1fr 1fr; gap:16px }
+  @media (max-width:460px){ .two{ grid-template-columns:1fr } }
+  form .btn-primary{ width:100%; justify-content:center; font-size:1rem; padding:1em }
+  .form-note{ font-size:.78rem; color:var(--faint); margin-top:12px; text-align:center }
+  .err{ color:var(--rose-2); font-size:.82rem; margin-top:8px; min-height:1em }
+
+  .success{ text-align:center; padding:8px 4px }
+  .success .mark{ width:62px; height:62px; margin:0 auto 18px; border-radius:50%; background:rgba(232,90,138,.14); display:grid; place-items:center; color:var(--rose) }
+  .success h3{ font-size:1.6rem }
+  .success p{ color:var(--muted); margin:10px auto 24px; max-width:40ch }
+  .success .summary{ text-align:left; background:var(--bg); border:1px solid var(--line); border-radius:var(--r-sm); padding:16px 18px; margin:0 0 22px; font-size:.9rem }
+  .success .summary .row{ display:flex; justify-content:space-between; gap:12px; padding:4px 0 }
+  .success .summary .row span:first-child{ color:var(--faint) }
+  .link-reset{ background:none; border:none; color:var(--faint); font-family:var(--body); font-size:.85rem; cursor:pointer; margin-top:16px; text-decoration:underline }
+  .link-reset:hover{ color:var(--fg) }
+
+  /* ---------- faq ---------- */
+  details{ border-bottom:1px solid var(--line); padding:4px 0 }
+  details summary{ cursor:pointer; list-style:none; padding:18px 0; font-size:1.08rem; display:flex; justify-content:space-between; align-items:center; gap:16px; font-family:var(--display); font-weight:400 }
+  details summary::-webkit-details-marker{ display:none }
+  details summary::after{ content:"+"; color:var(--rose); font-size:1.4rem; font-family:var(--body); transition:transform .25s ease }
+  details[open] summary::after{ transform:rotate(45deg) }
+  details .ans{ padding:0 0 18px; color:var(--muted); max-width:70ch }
+
+  /* ---------- footer ---------- */
+  footer{ background:var(--bg-2); border-top:1px solid var(--line); padding-block:clamp(44px,6vw,68px) }
+  .foot-grid{ display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:34px }
+  @media (max-width:760px){ .foot-grid{ grid-template-columns:1fr } }
+  footer h4{ font-family:var(--body); font-weight:500; font-size:.76rem; letter-spacing:.2em; text-transform:uppercase; color:var(--faint); margin:0 0 14px }
+  footer .brand{ margin-bottom:12px }
+  footer p{ margin:0 0 10px; color:var(--muted); font-size:.92rem }
+  .contact-line{ display:flex; align-items:center; gap:10px; margin-bottom:12px }
+  .copy{ background:var(--card); border:1px solid var(--line); color:var(--muted); border-radius:999px; font-family:var(--body); font-size:.78rem; padding:5px 12px; cursor:pointer; transition:.2s }
+  .copy:hover{ border-color:var(--rose); color:var(--fg) }
+  .socials{ display:flex; gap:12px }
+  .socials a{ width:40px; height:40px; border-radius:50%; border:1px solid var(--line); display:grid; place-items:center; color:var(--muted); transition:.25s }
+  .socials a:hover{ border-color:var(--rose); color:var(--rose-2); transform:translateY(-2px) }
+  .legal{ margin-top:38px; padding-top:22px; border-top:1px solid var(--line); display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-between; color:var(--faint); font-size:.8rem }
+</style>
+
+<!-- ============================================================
+     AURA · Lash & Nail  — SPA
+     PARA LA PROPIETARIA: edita el bloque CONFIG (al final, en <script>)
+     con tu número de WhatsApp y tus redes. Reemplaza precios/textos
+     en el HTML y, cuando tengas fotos reales, cámbialas en la galería.
+     ============================================================ -->
+
+<header class="nav" id="nav">
+  <div class="rail nav-in">
+    <a class="brand" href="#top">Luna <span>Lash &amp; Nail</span></a>
+    <nav class="nav-links">
+      <a href="#servicios">Servicios</a>
+      <a href="#galeria">Galería</a>
+      <a href="#opiniones">Opiniones</a>
+      <a href="#faq">Dudas</a>
+    </nav>
+    <a href="#agendar" class="btn btn-primary">Agendar cita</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero rail">
+    <div class="hero-grid">
+      <div>
+        <span class="eyebrow">Atelier de pestañas y uñas · Tu ciudad</span>
+        <h1>Pestañas que <em>hablan</em>.<br>Uñas que <em>firman</em>.</h1>
+        <p class="sub lead">Un espacio pensado para ti: diseño personalizado, productos premium e higiene impecable. Sales como llegaste —tú— pero imposible de ignorar.</p>
+        <div class="hero-cta">
+          <a href="#agendar" class="btn btn-primary">Agendar mi cita
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="#servicios" class="btn btn-ghost">Ver servicios</a>
+        </div>
+        <div class="proof">
+          <span><b>+500</b> clientas felices</span><span class="dot"></span>
+          <span><b>4.9</b> ★ valoración</span><span class="dot"></span>
+          <span>Productos <b>hipoalergénicos</b></span>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <!-- Ilustración: ojo con pestañas + gota de esmalte -->
+        <svg viewBox="0 0 440 440" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="iris" cx="50%" cy="45%" r="60%">
+              <stop offset="0%" stop-color="#f59ab9"/>
+              <stop offset="55%" stop-color="#e85a8a"/>
+              <stop offset="100%" stop-color="#6c3f6a"/>
+            </radialGradient>
+            <linearGradient id="stroke" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#f59ab9"/>
+              <stop offset="100%" stop-color="#d8a86b"/>
+            </linearGradient>
+            <linearGradient id="drop" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#f59ab9"/>
+              <stop offset="100%" stop-color="#c8406f"/>
+            </linearGradient>
+          </defs>
+          <circle cx="220" cy="210" r="196" fill="none" stroke="#3a2b3d" stroke-width="1"/>
+          <circle cx="220" cy="210" r="150" fill="none" stroke="#2a1e2f" stroke-width="1"/>
+          <!-- eye almond -->
+          <path d="M70 215 Q220 95 370 215 Q220 320 70 215 Z" fill="none" stroke="url(#stroke)" stroke-width="2.5"/>
+          <circle cx="220" cy="210" r="52" fill="url(#iris)"/>
+          <circle cx="220" cy="210" r="22" fill="#120d14"/>
+          <circle cx="205" cy="196" r="9" fill="#f4ebf0" opacity=".85"/>
+          <!-- lashes -->
+          <g stroke="url(#stroke)" stroke-width="3" stroke-linecap="round" fill="none">
+            <path d="M92 196 Q78 150 70 132"/>
+            <path d="M126 168 Q118 120 112 96"/>
+            <path d="M166 150 Q162 104 160 78"/>
+            <path d="M210 142 Q210 96 212 70"/>
+            <path d="M254 144 Q260 100 266 76"/>
+            <path d="M296 154 Q308 112 318 90"/>
+            <path d="M334 172 Q352 134 366 116"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUES -->
+  <div class="values">
+    <div class="rail">
+      <div class="value">
+        <div class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l2.4 5 5.6.5-4.3 3.7 1.3 5.5L12 19l-5 2.7 1.3-5.5L4 12.5 9.6 12 12 2z"/></svg></div>
+        <h3>Higiene certificada</h3>
+        <p>Material esterilizado y desechable en cada servicio.</p>
+      </div>
+      <div class="value">
+        <div class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-4.4-9-9.4C1.5 7.5 4 4 7.5 4 9.6 4 11 5.4 12 7c1-1.6 2.4-3 4.5-3C20 4 22.5 7.5 21 11.6 19 16.6 12 21 12 21z"/></svg></div>
+        <h3>Diseño a tu medida</h3>
+        <p>Mapeo de mirada y forma de uña según tu estilo.</p>
+      </div>
+      <div class="value">
+        <div class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <h3>Puntualidad</h3>
+        <p>Citas escalonadas: tu hora es solo tuya, sin esperas.</p>
+      </div>
+      <div class="value">
+        <div class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 7l-9 9-4-4"/><path d="M3 12a9 9 0 1 0 2-5.6"/></svg></div>
+        <h3>Productos premium</h3>
+        <p>Marcas profesionales, hipoalergénicas y de larga duración.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SERVICIOS -->
+  <section id="servicios" class="rail">
+    <div class="sec-head">
+      <span class="eyebrow">Carta de servicios</span>
+      <h2>Cada detalle, pensado para realzarte</h2>
+      <p class="lead">Elige tu servicio y resérvalo en segundos. Los precios son desde; el valor final depende del diseño y largo elegido en tu valoración.</p>
+    </div>
+
+    <div class="svc-group">
+      <h3>Pestañas</h3>
+      <div class="svc-grid">
+        <article class="svc">
+          <div class="top"><h4>Clásicas</h4><span class="price">desde $450</span></div>
+          <p>Una extensión por pestaña natural. Elegancia discreta para el día a día.</p>
+          <div class="meta"><span class="dur">90 min</span><button class="pick" data-svc="Pestañas clásicas">Agendar →</button></div>
+        </article>
+        <article class="svc">
+          <div class="top"><h4>Híbridas</h4><span class="price">desde $550</span></div>
+          <p>Mezcla de clásico y volumen. Densidad equilibrada, mirada definida.</p>
+          <div class="meta"><span class="dur">120 min</span><button class="pick" data-svc="Pestañas híbridas">Agendar →</button></div>
+        </article>
+        <article class="svc">
+          <div class="top"><h4>Volumen ruso</h4><span class="price">desde $650</span></div>
+          <p>Abanicos ultraligeros hechos a mano. Intensidad con comodidad.</p>
+          <div class="meta"><span class="dur">120 min</span><button class="pick" data-svc="Volumen ruso">Agendar →</button></div>
+        </article>
+        <article class="svc">
+          <div class="top"><h4>Mega volumen</h4><span class="price">desde $800</span></div>
+          <p>Máxima densidad y efecto dramático para quien ama destacar.</p>
+          <div class="meta"><span class="dur">150 min</span><button class="pick" data-svc="Mega volumen">Agendar →</button></div>
+        </article>
+        <article class="svc">
+          <div class="top"><h4>Lifting + tinte</h4><span class="price">desde $400</span></div>
+          <p>Tus pestañas naturales, curvadas y pigmentadas. Sin extensiones.</p>
+          <div class="meta"><span class="dur">60 min</span><button class="pick" data-svc="Lifting + tinte">Agendar →</button></div>
+        </article>
+        <article class="svc">
+          <div class="top"><h4>Retoque</h4><span class="price">desde $280</span></div>
+          <p>Mantenimiento a las 2–3 semanas para conservar tu volumen.</p>
+          <div class="meta"><span class="dur">60 min</span><button class="pick" data-svc="Retoque de pestañas">Agendar →</button></div>
+        </article>
+      </div>
+    </div>
+
+    <div class="svc-group">
+      <h3>Uñas</h3>
+      <div class="svc-grid">
+        <article class="svc">
+          <div class="top"><h4>Gelish</h4><span class="price">desde $350</span></div>
+          <p>Color impecable y brillo que dura semanas sobre tu uña natural.</p>
+          <div class="meta"><span class="dur">60 min</span><button class="pick" data-svc="Gelish">Agendar →</button></div>
+        </article>
+        <article class="svc">
+          <div class="top"><h4>Acrílicas</h4><span class="price">desde $550</span></div>
+          <p>Largo y forma esculpidos a tu medida. Resistencia total.</p>
+          <div class="meta"><span class="dur">120 min</span><button class="pick" data-svc="Uñas acrílicas">Agendar →</button></div>
+        </article>
+        <article class="svc">
+          <div class="top"><h4>Baño de acrílico</h4><span class="price">desde $450</span></div>
+          <p>Refuerzo natural sobre uña propia. Fuerte, delgado y discreto.</p>
+          <div class="meta"><span class="dur">90 min</span><button class="pick" data-svc="Baño de acrílico">Agendar →</button></div>
+        </article>
+        <article class="svc">
+          <div class="top"><h4>Builder / Rubber</h4><span class="price">desde $500</span></div>
+          <p>La resistencia del gel con un acabado natural y flexible.</p>
+          <div class="meta"><span class="dur">90 min</span><button class="pick" data-svc="Builder / Rubber gel">Agendar →</button></div>
+        </article>
+        <article class="svc">
+          <div class="top"><h4>Nail art</h4><span class="price">desde $80 c/u</span></div>
+          <p>Encapsulado, cromo espejo, 3D, pedrería y diseños a mano.</p>
+          <div class="meta"><span class="dur">+ tiempo</span><button class="pick" data-svc="Nail art / diseño">Agendar →</button></div>
+        </article>
+        <article class="svc">
+          <div class="top"><h4>Pedicure spa</h4><span class="price">desde $400</span></div>
+          <p>Cuidado completo, exfoliación y color. Pies de revista.</p>
+          <div class="meta"><span class="dur">75 min</span><button class="pick" data-svc="Pedicure spa">Agendar →</button></div>
+        </article>
+      </div>
+    </div>
+    <p class="note">* Precios de referencia en tu moneda local. Confirma el total en tu valoración gratuita antes de empezar.</p>
+  </section>
+
+  <!-- GALERIA / LOOKBOOK -->
+  <section id="galeria" class="look">
+    <div class="rail">
+      <div class="sec-head">
+        <span class="eyebrow">Lookbook</span>
+        <h2>Estilos que puedes pedir por nombre</h2>
+        <p class="lead">Una muestra de acabados favoritos. <em>Propietaria: sustituye estos lienzos por tus fotos reales para máximo impacto.</em></p>
+      </div>
+      <div class="look-grid">
+        <!-- Cada .tile: cuando tengas foto, reemplaza el <svg> por <img src="foto.jpg" alt="..."> -->
+        <figure class="tile">
+          <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6c3f6a"/><stop offset="1" stop-color="#e85a8a"/></linearGradient></defs><rect width="400" height="500" fill="url(#g1)"/><g stroke="#fff" stroke-opacity=".5" stroke-width="3" fill="none" stroke-linecap="round"><path d="M120 250 Q110 200 104 170"/><path d="M160 232 Q154 182 150 150"/><path d="M200 224 Q200 174 202 142"/><path d="M240 230 Q248 182 254 152"/><path d="M280 246 Q294 200 304 174"/></g></svg>
+          <figcaption class="cap"><div class="k">Pestañas</div><div class="t">Ojo de gato</div></figcaption>
+        </figure>
+        <figure class="tile">
+          <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g2" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#241a27"/><stop offset="1" stop-color="#d8a86b"/></linearGradient></defs><rect width="400" height="500" fill="url(#g2)"/><g fill="#fff" fill-opacity=".9"><ellipse cx="140" cy="250" rx="26" ry="40"/><ellipse cx="200" cy="235" rx="26" ry="44"/><ellipse cx="260" cy="250" rx="26" ry="40"/></g></svg>
+          <figcaption class="cap"><div class="k">Uñas</div><div class="t">Cromo espejo</div></figcaption>
+        </figure>
+        <figure class="tile">
+          <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="g3" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#f59ab9"/><stop offset="1" stop-color="#6c3f6a"/></radialGradient></defs><rect width="400" height="500" fill="url(#g3)"/><path d="M60 300 Q200 140 340 300" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="3"/><circle cx="200" cy="270" r="34" fill="#120d14" fill-opacity=".5"/></svg>
+          <figcaption class="cap"><div class="k">Pestañas</div><div class="t">Efecto zorro</div></figcaption>
+        </figure>
+        <figure class="tile">
+          <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c8406f"/><stop offset="1" stop-color="#241a27"/></linearGradient></defs><rect width="400" height="500" fill="url(#g4)"/><g fill="none" stroke="#f4ebf0" stroke-opacity=".7" stroke-width="2.5"><path d="M150 180 q50 30 0 60 q-50 -30 0 -60Z"/><path d="M230 230 q50 30 0 60 q-50 -30 0 -60Z"/><path d="M190 300 q50 30 0 60 q-50 -30 0 -60Z"/></g></svg>
+          <figcaption class="cap"><div class="k">Uñas</div><div class="t">Encapsulado floral</div></figcaption>
+        </figure>
+        <figure class="tile">
+          <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g5" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e85a8a"/><stop offset="1" stop-color="#d8a86b"/></linearGradient></defs><rect width="400" height="500" fill="url(#g5)"/><g stroke="#120d14" stroke-opacity=".4" stroke-width="3" fill="none" stroke-linecap="round"><path d="M110 260 Q200 150 290 260"/><path d="M130 285 Q200 190 270 285"/></g></svg>
+          <figcaption class="cap"><div class="k">Pestañas</div><div class="t">Volumen muñeca</div></figcaption>
+        </figure>
+        <figure class="tile">
+          <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g6" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6c3f6a"/><stop offset="1" stop-color="#120d14"/></linearGradient></defs><rect width="400" height="500" fill="url(#g6)"/><g fill="#f4ebf0" fill-opacity=".92"><path d="M150 210h100v70a50 50 0 0 1-100 0Z"/><path d="M150 210l100 0 -14-26-72 0Z" fill="#e85a8a"/></g></svg>
+          <figcaption class="cap"><div class="k">Uñas</div><div class="t">Francesa invertida</div></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- OPINIONES -->
+  <section id="opiniones" class="rail">
+    <div class="sec-head">
+      <span class="eyebrow">Opiniones</span>
+      <h2>Lo que dicen quienes ya se consintieron</h2>
+    </div>
+    <div class="quotes">
+      <figure class="quote">
+        <div class="stars">★★★★★</div>
+        <p>“Llevo un año y mis pestañas nunca se habían visto tan naturales y duraderas. El lugar es un sueño.”</p>
+        <figcaption class="who"><span class="av" style="background:linear-gradient(135deg,#e85a8a,#6c3f6a)">MF</span><div><b>María F.</b><span>Volumen ruso</span></div></figcaption>
+      </figure>
+      <figure class="quote">
+        <div class="stars">★★★★★</div>
+        <p>“Puntual, limpísimo y con un trato que te hace volver. Mis uñas duraron 4 semanas impecables.”</p>
+        <figcaption class="who"><span class="av" style="background:linear-gradient(135deg,#d8a86b,#c8406f)">LA</span><div><b>Lucía A.</b><span>Acrílicas + nail art</span></div></figcaption>
+      </figure>
+      <figure class="quote">
+        <div class="stars">★★★★★</div>
+        <p>“Me asesoró según mi tipo de ojo y el resultado fue justo lo que soñaba. 100% recomendada.”</p>
+        <figcaption class="who"><span class="av" style="background:linear-gradient(135deg,#6c3f6a,#f59ab9)">DR</span><div><b>Daniela R.</b><span>Lifting + tinte</span></div></figcaption>
+      </figure>
+    </div>
+    <p class="note">* Testimonios de ejemplo. Propietaria: reemplázalos por reseñas reales (idealmente de Google o Instagram).</p>
+  </section>
+
+  <!-- AGENDAR -->
+  <section id="agendar" class="book">
+    <div class="rail">
+      <div class="sec-head">
+        <span class="eyebrow">Reserva</span>
+        <h2>Agenda tu cita en un minuto</h2>
+        <p class="lead">Completa tus datos y te llevamos directo a WhatsApp con tu solicitud lista para enviar. Te confirmamos disponibilidad al instante.</p>
+      </div>
+      <div class="book-grid">
+        <div>
+          <ol class="steps">
+            <li><div><b>Elige servicio y horario</b><p>Dinos qué quieres y cuándo te acomoda.</p></div></li>
+            <li><div><b>Confirma por WhatsApp</b><p>Te respondemos disponibilidad y el anticipo para reservar.</p></div></li>
+            <li><div><b>Disfruta tu cita</b><p>Llega 5 min antes, relájate y sal radiante.</p></div></li>
+          </ol>
+          <div class="hours">
+            <h4>Horario</h4>
+            <div class="row"><span>Lunes – Viernes</span><span>10:00 – 20:00</span></div>
+            <div class="row"><span>Sábado</span><span>09:00 – 18:00</span></div>
+            <div class="row"><span>Domingo</span><span>Solo con cita previa</span></div>
+          </div>
+        </div>
+
+        <form class="card" id="bookForm" novalidate>
+          <div class="field">
+            <label for="f-nombre">Nombre <span class="req">*</span></label>
+            <input id="f-nombre" name="nombre" type="text" autocomplete="name" placeholder="Tu nombre">
+          </div>
+          <div class="field">
+            <label for="f-tel">WhatsApp / Teléfono <span class="req">*</span></label>
+            <input id="f-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="55 1234 5678">
+          </div>
+          <div class="field">
+            <label for="f-servicio">Servicio <span class="req">*</span></label>
+            <select id="f-servicio" name="servicio">
+              <option value="" disabled selected>Selecciona un servicio</option>
+              <optgroup label="Pestañas">
+                <option>Pestañas clásicas</option>
+                <option>Pestañas híbridas</option>
+                <option>Volumen ruso</option>
+                <option>Mega volumen</option>
+                <option>Lifting + tinte</option>
+                <option>Retoque de pestañas</option>
+              </optgroup>
+              <optgroup label="Uñas">
+                <option>Gelish</option>
+                <option>Uñas acrílicas</option>
+                <option>Baño de acrílico</option>
+                <option>Builder / Rubber gel</option>
+                <option>Nail art / diseño</option>
+                <option>Pedicure spa</option>
+              </optgroup>
+              <option>Aún no lo sé / asesoría</option>
+            </select>
+          </div>
+          <div class="two">
+            <div class="field">
+              <label for="f-fecha">Fecha <span class="req">*</span></label>
+              <input id="f-fecha" name="fecha" type="date">
+            </div>
+            <div class="field">
+              <label for="f-hora">Hora <span class="req">*</span></label>
+              <input id="f-hora" name="hora" type="time" step="900">
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-notas">Notas (opcional)</label>
+            <textarea id="f-notas" name="notas" placeholder="Alergias, diseño que quieres, primera vez, etc."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Enviar por WhatsApp
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.7 15l-1.3 4.8 4.9-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20zm4.5-5.9c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8 1c-.1.2-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.2-.4.2-.4.6-1.2.1-.1 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.8.8-.8 2 0 3.2a9 9 0 0 0 3.5 3.1c2 .9 2 .6 2.4.6.5 0 1.4-.6 1.6-1.1.2-.5.2-1 .1-1.1 0-.1-.2-.2-.4-.3z"/></svg>
+          </button>
+          <div class="err" id="formErr" role="alert"></div>
+          <p class="form-note">Reserva sujeta a confirmación de disponibilidad y anticipo.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="rail">
+    <div class="sec-head">
+      <span class="eyebrow">Buenas a saber</span>
+      <h2>Preguntas frecuentes</h2>
+    </div>
+    <div style="margin-top:28px">
+      <details open><summary>¿Necesito dar anticipo para reservar?</summary><div class="ans">Sí. Para apartar tu horario pedimos un pequeño anticipo que se descuenta del total del servicio. Así aseguramos tu lugar y reducimos cancelaciones de último minuto.</div></details>
+      <details><summary>¿Qué pasa si llego tarde?</summary><div class="ans">Hay una tolerancia de 15 minutos. Pasado ese tiempo quizá debamos ajustar o reagendar tu servicio para no afectar a la siguiente clienta. Te pedimos avisar si vas con retraso.</div></details>
+      <details><summary>¿Cómo cuido mis extensiones de pestañas?</summary><div class="ans">Evita agua y vapor las primeras 24 h, no uses rímel ni productos oleosos, peina con el cepillito a diario y duerme boca arriba si puedes. Con buen cuidado duran de 3 a 4 semanas.</div></details>
+      <details><summary>¿Cada cuánto me toca retoque?</summary><div class="ans">Recomendamos retoque cada 2 a 3 semanas para mantener densidad. Si pasas de 4 semanas, se cobra como aplicación nueva.</div></details>
+      <details><summary>¿Puedo cancelar o reagendar?</summary><div class="ans">Claro. Avísanos con al menos 24 horas de anticipación por WhatsApp y reprogramamos sin problema conservando tu anticipo.</div></details>
+      <details><summary>¿Atienden a primera vez / menores?</summary><div class="ans">¡Bienvenidas! En tu primera visita hacemos una breve asesoría para elegir el estilo ideal. Personas menores de edad requieren acompañamiento de madre, padre o tutor.</div></details>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="rail">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="#top">Luna <span>Lash &amp; Nail</span></a>
+        <p>Atelier de belleza para tu mirada y tus manos. Diseño personalizado, higiene certificada y resultados que enamoran.</p>
+        <div class="socials">
+          <a id="ig" href="#" target="_blank" rel="noopener" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg></a>
+          <a id="tk" href="#" target="_blank" rel="noopener" aria-label="TikTok"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 3c.3 2 1.6 3.6 3.6 3.9v2.4c-1.3 0-2.6-.4-3.6-1.1v5.9a5.6 5.6 0 1 1-5.6-5.6c.3 0 .6 0 .9.1v2.5a3.1 3.1 0 1 0 2.2 3V3H16z"/></svg></a>
+          <a id="wa" href="#" target="_blank" rel="noopener" aria-label="WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.7 15l-1.3 4.8 4.9-1.3A10 10 0 1 0 12 2zm4.5 12.1c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8 1c-.1.2-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.2-.4.2-.4.6-1.2.1-.1 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.8.8-.8 2 0 3.2a9 9 0 0 0 3.5 3.1c2 .9 2 .6 2.4.6.5 0 1.4-.6 1.6-1.1.2-.5.2-1 .1-1.1z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <h4>Contacto</h4>
+        <div class="contact-line"><span id="waText">+52 55 1234 5678</span><button class="copy" id="copyWa">Copiar</button></div>
+        <p>Dirección: Tu calle 123, Tu Colonia,<br>Tu Ciudad (dentro de Plaza Ejemplo).</p>
+        <p>Con cita previa · Estacionamiento cercano</p>
+      </div>
+      <div>
+        <h4>Horario</h4>
+        <p>Lun – Vie · 10:00 – 20:00<br>Sábado · 09:00 – 18:00<br>Domingo · con cita</p>
+        <a href="#agendar" class="btn btn-ghost" style="margin-top:6px">Agendar cita</a>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© <span id="yr"></span> Luna Lash &amp; Nail. Hecho con cariño.</span>
+      <span>Reemplaza datos de ejemplo antes de publicar.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ======================================================================
+     CONFIG — PROPIETARIA, EDITA AQUÍ
+     - whatsapp: tu número con código de país, solo dígitos (sin + ni espacios)
+       México ejemplo: 52 + 10 dígitos -> "5215512345678"
+     - instagram / tiktok: tus enlaces completos
+     ====================================================================== */
+  var CONFIG = {
+    nombre: "Luna",
+    whatsapp: "5215512345678",          // << CAMBIA ESTE NÚMERO
+    whatsappDisplay: "+52 55 1234 5678",// << como quieres que se vea
+    instagram: "https://instagram.com/", // << tu Instagram
+    tiktok: "https://tiktok.com/"         // << tu TikTok
+  };
+
+  // aplicar config a la UI
+  document.getElementById("waText").textContent = CONFIG.whatsappDisplay;
+  document.getElementById("ig").href = CONFIG.instagram;
+  document.getElementById("tk").href = CONFIG.tiktok;
+  document.getElementById("wa").href = "https://wa.me/" + CONFIG.whatsapp;
+  document.getElementById("yr").textContent = new Date().getFullYear();
+
+  // nav sombra al hacer scroll
+  var nav = document.getElementById("nav");
+  addEventListener("scroll", function(){
+    nav.classList.toggle("scrolled", scrollY > 10);
+  }, {passive:true});
+
+  // fecha mínima = hoy
+  var fFecha = document.getElementById("f-fecha");
+  try { fFecha.min = new Date().toISOString().split("T")[0]; } catch(e){}
+
+  // recordar nombre/teléfono localmente (comodidad por dispositivo)
+  var LS = "aura_cliente";
+  try {
+    var saved = JSON.parse(localStorage.getItem(LS) || "{}");
+    if(saved.nombre) document.getElementById("f-nombre").value = saved.nombre;
+    if(saved.tel) document.getElementById("f-tel").value = saved.tel;
+  } catch(e){}
+
+  // botones "Agendar" de cada servicio -> preselecciona y baja al formulario
+  document.querySelectorAll(".pick").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var sel = document.getElementById("f-servicio");
+      var val = btn.getAttribute("data-svc");
+      for(var i=0;i<sel.options.length;i++){ if(sel.options[i].value===val||sel.options[i].text===val){ sel.selectedIndex=i; break; } }
+      document.getElementById("agendar").scrollIntoView({behavior:"smooth"});
+      sel.style.borderColor = "var(--rose)";
+    });
+  });
+
+  // envío del formulario
+  var form = document.getElementById("bookForm");
+  var errBox = document.getElementById("formErr");
+
+  form.addEventListener("submit", function(ev){
+    ev.preventDefault();
+    errBox.textContent = "";
+
+    var nombre = form.nombre.value.trim();
+    var tel = form.tel.value.trim();
+    var servicio = form.servicio.value;
+    var fecha = form.fecha.value;
+    var hora = form.hora.value;
+    var notas = form.notas.value.trim();
+
+    if(!nombre || !tel || !servicio || !fecha || !hora){
+      errBox.textContent = "Por favor completa tu nombre, teléfono, servicio, fecha y hora.";
+      return;
+    }
+    if(tel.replace(/\D/g,"").length < 8){
+      errBox.textContent = "Escribe un número de teléfono válido para poder confirmarte.";
+      return;
+    }
+
+    // guardar comodidad local
+    try { localStorage.setItem(LS, JSON.stringify({nombre:nombre, tel:tel})); } catch(e){}
+
+    // fecha legible
+    var fechaTxt = fecha;
+    try {
+      var d = new Date(fecha + "T00:00:00");
+      fechaTxt = d.toLocaleDateString("es-MX",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+    } catch(e){}
+
+    // mensaje de WhatsApp
+    var msg =
+      "Hola " + CONFIG.nombre + ", quiero agendar una cita:\n\n" +
+      "• Nombre: " + nombre + "\n" +
+      "• Servicio: " + servicio + "\n" +
+      "• Fecha: " + fechaTxt + "\n" +
+      "• Hora: " + hora + "\n" +
+      "• Teléfono: " + tel +
+      (notas ? "\n• Notas: " + notas : "") +
+      "\n\n¿Tienes disponibilidad? ¡Gracias!";
+
+    var waUrl = "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(msg);
+
+    // abrir WhatsApp en pestaña nueva (enlace https, confiable)
+    window.open(waUrl, "_blank", "noopener");
+
+    // pantalla de confirmación dentro de la tarjeta
+    renderSuccess({nombre:nombre, servicio:servicio, fechaTxt:fechaTxt, hora:hora, waUrl:waUrl});
+  });
+
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+
+  function renderSuccess(d){
+    form.innerHTML =
+      '<div class="success">' +
+        '<div class="mark"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>' +
+        '<h3>¡Tu solicitud está lista!</h3>' +
+        '<p>Se abrió WhatsApp con tu mensaje. Solo presiona <b>enviar</b> y te confirmamos tu lugar.</p>' +
+        '<div class="summary">' +
+          '<div class="row"><span>Nombre</span><span>'+esc(d.nombre)+'</span></div>' +
+          '<div class="row"><span>Servicio</span><span>'+esc(d.servicio)+'</span></div>' +
+          '<div class="row"><span>Fecha</span><span>'+esc(d.fechaTxt)+'</span></div>' +
+          '<div class="row"><span>Hora</span><span>'+esc(d.hora)+'</span></div>' +
+        '</div>' +
+        '<a class="btn btn-primary" href="'+d.waUrl+'" target="_blank" rel="noopener" style="width:100%;justify-content:center">¿No se abrió? Abrir WhatsApp</a>' +
+        '<br><button type="button" class="link-reset" id="again">Agendar otra cita</button>' +
+      '</div>';
+    document.getElementById("again").addEventListener("click", function(){ location.reload(); });
+    form.scrollIntoView({behavior:"smooth", block:"center"});
+  }
+
+  // copiar número
+  var copyBtn = document.getElementById("copyWa");
+  copyBtn.addEventListener("click", function(){
+    var txt = CONFIG.whatsappDisplay;
+    function done(){ copyBtn.textContent="¡Copiado!"; setTimeout(function(){copyBtn.textContent="Copiar";},1600); }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(done).catch(select);
+    } else { select(); }
+    function select(){
+      var r=document.createRange(); r.selectNodeContents(document.getElementById("waText"));
+      var s=getSelection(); s.removeAllRanges(); s.addRange(r); done();
+    }
+  });
+})();
+</script>
